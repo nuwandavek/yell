@@ -6,13 +6,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;400;900&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.0/dist/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.0/dist/semantic.min.js"></script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flexboxgrid@6.3.1/dist/flexboxgrid.min.css">
-    <link rel="icon" type="image/x-icon" href="./assets/logo.ico">
-    <!--socketio library for browser js-->
+    <!-- <link rel="icon" type="image/x-icon" href="./assets/logo.ico"> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
 
 
@@ -84,6 +84,10 @@
               <div class="ui red labeled icon button col-xs-3" id="transcribe-3">
                 Live Transcribe
                 <i class="feather alternate icon"></i>
+              </div>
+              <div class="ui disabled red labeled icon button col-xs-2" id="transcribe-3-stop">
+                Stop
+                <i class="stop icon"></i>
               </div>
               <div class="col-xs-12" id="blinker">
                 <i class="circle blink icon"></i>

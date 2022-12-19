@@ -1,4 +1,8 @@
- const audioRecorder = {
+let recentAudioBlob = null;
+let socket = null
+const LIVE_INTERVAL = 5000;
+
+const audioRecorder = {
   audioBlobs: [],
   mediaRecorder: null,
   stream: null,
@@ -22,15 +26,26 @@
   },
   stop: function () {
     return new Promise(resolve => {
-        let mimeType = audioRecorder.mediaRecorder.mimeType;
-        audioRecorder.mediaRecorder.addEventListener("stop", () => {
-            let audioBlob = new Blob(audioRecorder.audioBlobs, { type: mimeType });
-            let audioUrl = URL.createObjectURL(audioBlob);
-            resolve({audioBlob, audioUrl});
-        });
-    audioRecorder.mediaRecorder.stop();
-    audioRecorder.stopStream();
-    audioRecorder.resetRecordingProperties();
+      let mimeType = audioRecorder.mediaRecorder.mimeType;
+      audioRecorder.mediaRecorder.addEventListener("stop", () => {
+        let audioBlob = new Blob(audioRecorder.audioBlobs, { type: mimeType });
+        let audioUrl = URL.createObjectURL(audioBlob);
+        resolve({audioBlob, audioUrl});
+      });
+      audioRecorder.mediaRecorder.stop();
+      audioRecorder.stopStream();
+      audioRecorder.resetRecordingProperties();
+    });
+  },
+  liveStreamLoop: function() {
+    return new Promise(resolve => {
+      let mimeType = audioRecorder.mediaRecorder.mimeType;
+      audioRecorder.mediaRecorder.requestData();
+      let audioBlob = null;
+      if (audioRecorder.audioBlobs.length > 0){
+         audioBlob = new Blob(audioRecorder.audioBlobs, { type: mimeType });
+      }
+      resolve({audioBlob});
     });
   },
   stopStream: function() {
@@ -68,9 +83,6 @@ function setupTranscriptionMethod1(){
     getTranscription(audio)
   });
 }
-
-let recentAudioBlob = null;
-
 
 function setupTranscriptionMethod2(){
   $("#transcribe-2").click(()=>{
@@ -115,14 +127,60 @@ function setupTranscriptionMethod2(){
 }
 
 function setupTranscriptionMethod3(){
-  $("#transcribe-3").click(()=>{
-    $("#transcribe-3").addClass('disabled')
-    $("#blinker").show();
+  let setIntervalId = null;
+  socket.on('liveTranscription', function(data) {
+    console.log(data);
+    $("#transcription-text").text(data.text.trim());
+
   });
+
+  $("#transcribe-3").click(()=>{
+    $("#transcribe-3").addClass('disabled');
+    $("#transcribe-3-stop").removeClass('disabled');
+    $("#blinker").show();
+    $("#transcription-text").text("");
+    audioRecorder.start()
+      .then(() => { console.log("Recording Audio...")})    
+      .catch(error =>  console.log(error));
+    setIntervalId = setInterval(streamAudio, LIVE_INTERVAL)
+
+  });
+
+  $("#transcribe-3-stop").click(()=>{
+    $("#transcribe-3").removeClass('disabled');
+    $("#transcribe-3-stop").addClass('disabled');
+    $("#blinker").hide();
+    audioRecorder.stop()
+      .then( (audio) => {
+        clearInterval(setIntervalId);
+        console.log("Recording stopped!");
+        if (audio.audioBlob){
+          console.log("Sending blob at "+Date.now());
+          socket.emit('audioStream', {audio: audio.audioBlob});
+        }
+      })
+      .catch(error =>  console.log(error));
+  });
+}
+
+function streamAudio(){
+  audioRecorder.liveStreamLoop()
+      .then(audio => {
+        console.log(audio.audioBlob);
+        if (audio.audioBlob){
+          console.log("Sending blob at "+Date.now());
+          socket.emit('audioStream', {audio: audio.audioBlob});
+        }
+      })    
+      .catch(error =>  console.log(error));
 }
 
 window.onload = function initStuff() {
   console.log("Yell!");
+  socket = io();
+  socket.on('connect', function(d) {
+    console.log('Socketio Connected!', d);
+  });
   setupTranscriptionMethod1();
   setupTranscriptionMethod2();
   setupTranscriptionMethod3();
