@@ -47,52 +47,53 @@
   },
 }
 
-window.onload = function initStuff() {
-  console.log("Yell!");
-  let recentAudioBlob = null;
+function getTranscription(audio){
+  if(audio){
+    let formData = new FormData();
+    $("#spinny").show();
+    formData.append("file", audio);
+    fetch('/transcribe', {method: "POST", body: formData})
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      $("#spinny").hide();
+      $("#transcription-result").text(data.text.trim());
+    });
+  }
+}
 
+function setupTranscriptionMethod1(){
   $("#transcribe-1").click(()=>{
-    $("#spinny").show();
     let audio = ($("#actionfileinput")[0]).files[0];
-    let formData = new FormData();
-    
-    formData.append("file", audio);
-    fetch('/transcribe', {method: "POST", body: formData})
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      $("#spinny").hide();
-      $("#transcription-result").text(data.text.trim());
-    });
+    getTranscription(audio)
   });
+}
 
+let recentAudioBlob = null;
+
+
+function setupTranscriptionMethod2(){
   $("#transcribe-2").click(()=>{
-    $("#spinny").show();
     let audio = recentAudioBlob;
-    let formData = new FormData();
-    
-    formData.append("file", audio);
-    fetch('/transcribe', {method: "POST", body: formData})
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      $("#spinny").hide();
-      $("#transcription-result").text(data.text.trim());
-    });
+    getTranscription(audio)
   });
   
   $("#record-start").click(()=>{
     $("#record-start").addClass('disabled');
+    $("#record-text").text('Recording...');
     $(".record-actions").removeClass('disabled');
 
     audioRecorder.start()
       .then(() => { console.log("Recording Audio...")})    
       .catch(error =>  console.log(error));     
   })
-
-  $("#record-done").click(()=>{
+  function cancelStop(){
     $("#record-start").removeClass('disabled');
+    $("#record-text").text('Record');
     $(".record-actions").addClass('disabled');
+  }
+  $("#record-done").click(()=>{
+    cancelStop();
     audioRecorder.stop()
       .then( audio => {
         console.log("stopped with audio Blob:", audio.audioblob);
@@ -108,8 +109,21 @@ window.onload = function initStuff() {
   })
 
   $("#record-cancel").click(()=>{
-    $("#record-start").removeClass('disabled');
-    $(".record-actions").addClass('disabled');
+    cancelStop();
     audioRecorder.cancel();
   })
+}
+
+function setupTranscriptionMethod3(){
+  $("#transcribe-3").click(()=>{
+    $("#transcribe-3").addClass('disabled')
+    $("#blinker").show();
+  });
+}
+
+window.onload = function initStuff() {
+  console.log("Yell!");
+  setupTranscriptionMethod1();
+  setupTranscriptionMethod2();
+  setupTranscriptionMethod3();
 }

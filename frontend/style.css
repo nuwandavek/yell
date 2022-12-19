@@ -76,3 +76,41 @@ code {
     height: 100%;
     display: none;
 }
+
+#transcription-title {
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1rem;
+    font-weight: 900;
+}
+
+.divider{
+    color: #fff !important;
+}
+
+#all-inputs{
+    padding: 1rem;
+    border: 1px solid #2d3436;;
+    border-radius: 5px;
+    background: #2d3436;;
+}
+
+audio{
+    border: 1px solid #424e51;
+    border-radius: 5px;
+}
+
+#blinker {
+    color: #db2828;
+    margin: 1rem;
+    display: none;
+}
+
+.blink {
+    animation: blinker 1s infinite alternate;  
+}
+
+@keyframes blinker {  
+from { opacity: 1; }
+to { opacity: 0; }
+}
