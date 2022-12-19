@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;400;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.0/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.0/dist/semantic.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flexboxgrid@6.3.1/dist/flexboxgrid.min.css">
+    <link rel="icon" type="image/x-icon" href="./assets/logo.ico">
+    <!--socketio library for browser js-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"></script>
+
+
+    <link href="./style.css" rel="stylesheet"> 
+    <title>yell</title>
+  </head>
+  <body>
+    <div id="main-content" class="row center-xs">
+      <div id="spinny">
+        <div class="ui active inverted dimmer">
+          <div class="ui large text loader" id="loader">Querying...</div>
+        </div>
+        <p></p>
+        <p></p>
+        <p></p>
+      </div>
+      <div class="col-xs-12 col-md-12 center-xs">
+          <a href="/" style="text-decoration: none;">
+            <h1 id="jumbo-title">yell</h1>
+          </a>
+      </div>
+      <div class="row center-xs col-xs-12">
+        <div class="col-xs-6">
+          <div class="row col-xs-12 middle-xs center-xs" id="input-type-1">
+              <div class="ui file action input row col-xs-9">
+                <input id="actionfileinput" type="file">
+                <label for="actionfileinput" class="ui red labeled icon button">
+                  <i class="file audio icon"></i>
+                      Upload Audio
+                </label>
+              </div>
+              <div class="ui red labeled icon button col-xs-2" id="transcribe-1">
+              Transcribe
+              <i class="feather alternate icon"></i>
+              </div>
+          </div>
+          <div class="ui horizontal divider">
+            Or
+          </div>
+          <div class="row col-xs-12 center-xs middle-xs" id="input-type-2">
+            <div class="row col-xs-9 center-xs middle-xs">
+              <div class="col-xs-3 ui red labeled icon button" id="record-start">
+                Record
+                <i class="circle icon"></i>
+              </div>
+              <div class="col-xs-1 disabled ui red icon button record-actions" id="record-done">
+                <i class="check icon"></i>
+              </div>
+              <div class="col-xs-1 disabled ui red icon button record-actions" id="record-cancel">
+                <i class="times icon"></i>
+              </div>
+              <div class="row col-xs-6 middle-xs center-xs">
+                <audio controls id="recorded-audio">
+                  <source src="" id="recorded-audio-src">
+                </audio>
+              </div>
+              
+            </div>
+            <div class="ui red labeled icon button col-xs-2" id="transcribe-2">
+              Transcribe
+              <i class="feather alternate icon"></i>
+            </div>
+          </div>
+          <div class="col-xs-12 normal-font-light" id="transcription-result">
+        </div>
+        </div>
+      </div>
+      <div class="col-xs-12 center-xs footie">
+        <a class="col-xs-12 ui white label" href="https://github.com/nuwandavek/yell" target="_blank">
+          <i class="github icon"></i>
+            nuwandavek/yell
+        </a>
+        <p class="col-xs-12 normal-font fat-font" style="text-align: center; margin: 1rem;">Made with <i class="heart icon red"></i> by nuwandavek</p>
+      </div>
+    </div>
+    <script src="./jsmain.js"></script>
+  </body>
+</html>

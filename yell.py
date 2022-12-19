@@ -1,8 +1,7 @@
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, render_template
 from helpers import Yell
 
-app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = './uploads'
+app = Flask(__name__, template_folder="./frontend", static_folder="./frontend", static_url_path="")
 
 
 def setup_pipeline():
@@ -12,7 +11,7 @@ def setup_pipeline():
 
 @app.route('/')
 def home():
-  return Response('Welcome to the Flask server!')
+    return render_template('index.html')
 
 
 @app.route('/transcribe', methods=['POST', 'GET'])
